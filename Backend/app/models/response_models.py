@@ -19,3 +19,7 @@ class CarbonResponse(BaseModel):
 class EstimateResponse(BaseModel):
     vegetation: VegetationResponse
     carbon: CarbonResponse
+
+    satellite_image: str
+    mask_image: str
+    overlay_image: str
