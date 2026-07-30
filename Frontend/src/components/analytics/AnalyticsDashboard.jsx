@@ -12,15 +12,15 @@ import useAnalysis from "../../hooks/useAnalysis";
 
 export default function AnalyticsDashboard() {
   const {
-    vegetation,
-    biomass,
-    carbon,
-    credits,
-    area,
+  vegetation,
+  carbon,
   } = useAnalysis();
 
-  const carbonDensity =
-    area > 0 ? (carbon / area).toFixed(2) : "0.00";
+    const area = vegetation?.area_hectares ?? 0;
+    const biomass = 0;
+    const credits = 0;
+
+  const carbonDensity = carbon?.carbon_density ?? 0;
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
@@ -38,16 +38,16 @@ export default function AnalyticsDashboard() {
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
 
         <KPICard
-          title="Vegetation"
-          value={vegetation}
-          unit="%"
+          title="Vegetation Area"
+          value={vegetation?.area_hectares ?? 0}
+          unit="ha"
           color="green"
           icon={<FaLeaf />}
         />
 
         <KPICard
           title="Biomass"
-          value={biomass}
+          value={(carbon?.carbon_tonnes)*2 ?? 0}
           unit="t"
           color="emerald"
           icon={<FaTree />}
@@ -55,15 +55,15 @@ export default function AnalyticsDashboard() {
 
         <KPICard
           title="Carbon Stored"
-          value={carbon}
-          unit="tCO₂"
+          value={carbon?.carbon_tonnes ?? 0}
+          unit="t"
           color="blue"
           icon={<FaCloud />}
         />
 
         <KPICard
           title="Carbon Credits"
-          value={credits}
+          value={(carbon?.carbon_tonnes)/1000 ?? 0}
           color="amber"
           icon={<FaCoins />}
         />

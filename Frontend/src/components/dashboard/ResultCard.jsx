@@ -15,36 +15,30 @@ export default function ResultCard() {
     credits,
   } = useAnalysis();
 
-  const cards = [
-    {
-      title: "Vegetation",
-      value: vegetation,
-      suffix: "%",
-      icon: <FaLeaf className="text-green-600 text-3xl" />,
-      color: "bg-green-50",
-    },
-    {
-      title: "Biomass",
-      value: biomass,
-      suffix: " t",
-      icon: <FaTree className="text-emerald-600 text-3xl" />,
-      color: "bg-emerald-50",
-    },
-    {
-      title: "Carbon Stored",
-      value: carbon,
-      suffix: " tCO₂",
-      icon: <FaCloud className="text-blue-600 text-3xl" />,
-      color: "bg-blue-50",
-    },
-    {
-      title: "Carbon Credits",
-      value: credits,
-      suffix: "",
-      icon: <FaCoins className="text-amber-600 text-3xl" />,
-      color: "bg-amber-50",
-    },
-  ];
+ const cards = [
+  {
+    title: "Vegetation Area",
+    value: vegetation ? vegetation.area_hectares.toFixed(2) : "--",
+    suffix: " ha",
+    icon: <FaLeaf className="text-green-600 text-3xl" />,
+    color: "bg-green-50",
+  },
+  {
+    title: "Vegetation Pixels",
+    value: vegetation ? vegetation.vegetation_pixels : "--",
+    suffix: "",
+    icon: <FaTree className="text-emerald-600 text-3xl" />,
+    color: "bg-emerald-50",
+  },
+  {
+    title: "Carbon Stored",
+    value: carbon ? carbon.carbon_tonnes.toFixed(2) : "--",
+    suffix: " t",
+    icon: <FaCloud className="text-blue-600 text-3xl" />,
+    color: "bg-blue-50",
+  },
+
+];
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">

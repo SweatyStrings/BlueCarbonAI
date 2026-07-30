@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { analyzeCarbon } from "../services/carbonService";
 
 export const AnalysisContext = createContext();
 
@@ -22,6 +23,29 @@ export function AnalysisProvider({ children }) {
   const [analysisStep, setAnalysisStep] = useState("");
 
   const [analysisCompleted, setAnalysisCompleted] = useState(false);
+  const analyze = async () => {
+  try {
+    setLoading(true);
+    setIsAnalyzing(true);
+
+    const result = await analyzeCarbon({
+      latitude,
+      longitude,
+      buffer_meters: 1000,
+      ecosystem: "mangrove",
+    });
+
+    setVegetation(result.vegetation);
+    setCarbon(result.carbon);
+
+    setAnalysisCompleted(true);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+    setIsAnalyzing(false);
+  }
+};
 
   return (
     <AnalysisContext.Provider
@@ -60,7 +84,9 @@ export function AnalysisProvider({ children }) {
         setAnalysisStep,
 
         analysisCompleted,
-        setAnalysisCompleted,       
+        setAnalysisCompleted, 
+        
+        analyze,
       }}
     >
       {children}

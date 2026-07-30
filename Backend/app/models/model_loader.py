@@ -18,7 +18,7 @@ class ModelLoader:
 
     def load(self):
 
-        print("Loading Hugging Face model...")
+        
 
         model_name = "nvidia/segformer-b0-finetuned-ade-512-512"
 

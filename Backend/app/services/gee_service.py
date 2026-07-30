@@ -27,25 +27,26 @@ class GEEService:
         buffer_meters=1000,
         start_date="2024-01-01",
         end_date="2024-12-31",
-        max_cloud=10,
+        max_cloud=30,
     ):
 
         point = ee.Geometry.Point([longitude, latitude])
         aoi = point.buffer(buffer_meters).bounds()
 
-        image = (
+        collection = (
             ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
             .filterBounds(aoi)
             .filterDate(start_date, end_date)
             .filter(ee.Filter.lt("CLOUDY_PIXEL_PERCENTAGE", max_cloud))
             .sort("CLOUDY_PIXEL_PERCENTAGE")
-            .first()
         )
-        if image is None:
 
+        if collection.size().getInfo() == 0:
             raise SatelliteImageNotFound(
-            "No Sentinel-2 image found for this location."
+                "No Sentinel-2 image found for this location."
             )
+
+        image = collection.first()
 
         return image, aoi
 

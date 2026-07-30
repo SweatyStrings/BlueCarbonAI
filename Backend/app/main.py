@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.routes import carbon
 from app.routes import analyze
@@ -8,23 +9,20 @@ app = FastAPI(
     title="BlueCarbonAI Backend"
 )
 
-# Allow React frontend to access the API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",  # Vite default
+        "http://localhost:5173",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Existing route
+app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
+
 app.include_router(carbon.router)
-
-# New analysis route
 app.include_router(analyze.router)
-
 
 @app.get("/")
 def home():

@@ -4,7 +4,7 @@ import { FaSatellite, FaCalendarAlt, FaRulerCombined } from "react-icons/fa";
 import { MdOutlineVerified } from "react-icons/md";
 
 export default function SatellitePreview() {
-  const { area, satelliteImage } = useAnalysis();
+  const { vegetation, satelliteImage } = useAnalysis();
 
   const image = satelliteImage || placeholder;
 
@@ -58,7 +58,7 @@ export default function SatellitePreview() {
             Selected Area
           </span>
           <span className="font-semibold">
-            {area.toFixed(2)} ha
+            {vegetation ? vegetation.area_hectares.toFixed(2) : "--"} ha
           </span>
         </div>
 

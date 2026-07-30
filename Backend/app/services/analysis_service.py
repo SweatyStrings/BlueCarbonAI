@@ -104,7 +104,11 @@ class AnalysisService:
         )
 
         return {
-            "vegetation": stats,
-            "carbon": carbon,
-        }
+        "vegetation": stats,
+        "carbon": carbon,
+
+        "satellite_image": "http://127.0.0.1:8000/outputs/satellite.tif",
+        "mask_image": "http://127.0.0.1:8000/outputs/mask.png",
+        "overlay_image": "http://127.0.0.1:8000/outputs/overlay.png",
+    }
     

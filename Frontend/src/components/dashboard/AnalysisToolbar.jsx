@@ -1,8 +1,10 @@
 import useAnalysis from "../../hooks/useAnalysis";
+import carbonService from "../../services/carbonService";
 
 export default function AnalysisToolbar() {
   const {
-    polygon,
+    latitude,
+    longitude,
 
     setIsAnalyzing,
     setAnalysisProgress,
@@ -10,70 +12,59 @@ export default function AnalysisToolbar() {
     setAnalysisCompleted,
 
     setVegetation,
-    setBiomass,
     setCarbon,
-    setCredits,
+    setSatelliteImage,
   } = useAnalysis();
 
   const steps = [
-    {
-      title: "Preparing AOI",
-      progress: 10,
-    },
-    {
-      title: "Fetching Sentinel-2 Imagery",
-      progress: 25,
-    },
-    {
-      title: "Preprocessing Image",
-      progress: 40,
-    },
-    {
-      title: "Running AI Segmentation",
-      progress: 60,
-    },
-    {
-      title: "Estimating Biomass",
-      progress: 75,
-    },
-    {
-      title: "Calculating Carbon",
-      progress: 90,
-    },
-    {
-      title: "Generating Report",
-      progress: 100,
-    },
+    { title: "Preparing AOI", progress: 10 },
+    { title: "Fetching Sentinel-2 Imagery", progress: 25 },
+    { title: "Preprocessing Image", progress: 40 },
+    { title: "Running AI Segmentation", progress: 60 },
+    { title: "Estimating Biomass", progress: 75 },
+    { title: "Calculating Carbon", progress: 90 },
+    { title: "Generating Report", progress: 100 },
   ];
 
   async function handleAnalyze() {
-    if (!polygon) {
-      alert("Please draw a polygon first.");
+    if (latitude === null || longitude === null) {
+      alert("Please click a location on the map first.");
       return;
     }
 
-    setAnalysisCompleted(false);
-    setIsAnalyzing(true);
+    try {
+      setAnalysisCompleted(false);
+      setIsAnalyzing(true);
 
-    for (const step of steps) {
-      setAnalysisStep(step.title);
-      setAnalysisProgress(step.progress);
+      // Show progress animation
+      for (const step of steps) {
+        setAnalysisStep(step.title);
+        setAnalysisProgress(step.progress);
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
 
-      const result = await carbonService.analyzePolygon({
-       coordinates,
-      area,
+      const result = await carbonService.analyze({
+        latitude,
+        longitude,
+        buffer_meters: 1000,
+        ecosystem: "mangrove",
       });
+
+      console.log("Analysis Result:", result);
+      console.log("Vegetation:", result.vegetation);
+      console.log("Carbon:", result.carbon);
+
+      setVegetation(result.vegetation);
+      setCarbon(result.carbon);
+      setSatelliteImage(result.overlay_image);
+
+      setAnalysisCompleted(true);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      alert("Analysis failed. Please try again.");
+    } finally {
+      setIsAnalyzing(false);
     }
-
-    // Mock backend response
-    setVegetation(result.vegetation);
-    setBiomass(result.biomass);
-    setCarbon(result.carbon);
-    setCredits(result.credits);
-    setSatelliteImage(result.satellite_image);
-
-    setAnalysisCompleted(true);
-    setIsAnalyzing(false);
   }
 
   return (
