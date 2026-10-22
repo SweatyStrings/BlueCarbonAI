@@ -1,0 +1,40 @@
+@'
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+service-account*.json
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Node / Vite
+node_modules/
+dist/
+.vite/
+
+# Models, datasets, and generated outputs
+*.pth
+*.pt
+*.onnx
+*.npy
+*.tif
+*.tiff
+data/
+datasets/
+outputs/
+
+# Logs and system files
+*.log
+.DS_Store
+Thumbs.db
+
+# Local backup copy
+frontend_new_backup/
+'@ | Set-Content -Encoding UTF8 .gitignore
